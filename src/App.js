@@ -15,16 +15,16 @@ export default class App extends Component {
       <div>
         <Router>
         <Navbar/>
-        <Routes>
-          <Route path="/" element={<News pageSize={5} country="in" category="general" />} />
-          <Route path="/business" element={<News pageSize={5} country="in" category="business" />} />
-          <Route path="/entertainment" element={<News pageSize={5} country="in" category="entertainment" />} />
-          <Route path="/general" element={<News pageSize={5} country="in" category="general" />} />
-          <Route path="/health" element={<News pageSize={5} country="in" category="health" />} />
-          <Route path="/science" element={<News pageSize={5} country="in" category="science" />} />
-          <Route path="/sports" element={<News pageSize={5} country="in" category="sports" />} />
-          <Route path="/technology" element={<News pageSize={5} country="in" category="technology" />} />
-        </Routes>
+          <Routes>
+              <Route key="home" path="/" element={<News pageSize={5} country="in" category="general" />} />
+              <Route key="business" path="/business" element={<News pageSize={5} country="in" category="business" />} />
+              <Route key="entertainment" path="/entertainment" element={<News pageSize={5} country="in" category="entertainment" />} />
+              <Route key="general" path="/general" element={<News pageSize={5} country="in" category="general" />} />
+              <Route key="health" path="/health" element={<News pageSize={5} country="in" category="health" />} />
+              <Route key="science" path="/science" element={<News pageSize={5} country="in" category="science" />} />
+              <Route key="sports" path="/sports" element={<News pageSize={5} country="in" category="sports" />} />
+              <Route key="technology" path="/technology" element={<News pageSize={5} country="in" category="technology" />} />
+            </Routes>
         </Router>
       </div>
     )
