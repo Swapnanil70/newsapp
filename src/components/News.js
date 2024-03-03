@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import NewsItem from './NewsItem'
-import Spinner from './Spinner'
+// import Spinner from './Spinner'
 import PropTypes from 'prop-types'
 
 export class News extends Component {
@@ -19,14 +19,19 @@ export class News extends Component {
     category: PropTypes.string
   }
 
-  constructor(){
-    super(); // Whenever we create a constructor in a class based component we need to call super() method to call the constructor of the parent class
+  constructor(props){
+    super(props); // Whenever we create a constructor in a class based component we need to call super() method to call the constructor of the parent class
     this.state = {
       articles: [],
       loading: false,
       page: 1,
       totalResults: 0
     }
+    document.title = `${this.capitalizeFirstLetter(this.props.category)} - NewsMonkey`;
+  }
+
+  capitalizeFirstLetter = (string) =>{
+    return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
   async updateNews(){
@@ -53,9 +58,9 @@ export class News extends Component {
   render() {
     return (
       <div className='container my-3'>
-        <h1 className='text-center' style={{margin : '40px 0px'}}>NewsMonkey - Top Headlines</h1>
+        <h1 className='text-center' style={{margin : '40px 0px'}}>NewsMonkey - Top {this.capitalizeFirstLetter(this.props.category)} Headlines</h1>
         {/* Whenever the page is in loading state show the spinner component */}
-        {this.state.loading && <Spinner/>} 
+        {/* {this.state.loading && <Spinner/>}  */}
         <div className="row">
           {!this.state.loading && this.state.articles.map((element)=>{
             return <div className="col md-4" key={element.url}>
