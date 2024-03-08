@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
 import NewsItem from './NewsItem'
-// import Spinner from './Spinner'
+import Spinner from './Spinner'
 import PropTypes from 'prop-types'
+import InfiniteScroll from 'react-infinite-scroll-component'
 
 export class News extends Component {
 
   // Default props are used to set the default values of the props
   static defaultProps = {
     country: 'in',
-    pageSize: 8,
+    pageSize: 5,
     category: 'general'
   } 
 
@@ -45,6 +46,14 @@ export class News extends Component {
     this.updateNews();
   }
 
+  fetchMoreData = async() => {
+    this.setState({page : this.state.page + 1});
+    const url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=7fa53e49e8794638a5940ea59fb96ece&page=${this.state.page}&pageSize=${this.props.pageSize}`;
+    let data = await fetch(url);
+    let parsedData = await data.json();
+    this.setState({articles : this.state.articles.concat(parsedData.articles), totalResults: parsedData.totalResults, loading: false});
+  };
+
   handlePrevClick = async () => {
     this.setState({page: this.state.page-1});
     this.updateNews();
@@ -60,19 +69,29 @@ export class News extends Component {
       <div className='container my-3'>
         <h1 className='text-center' style={{margin : '40px 0px'}}>NewsMonkey - Top {this.capitalizeFirstLetter(this.props.category)} Headlines</h1>
         {/* Whenever the page is in loading state show the spinner component */}
-        {/* {this.state.loading && <Spinner/>}  */}
-        <div className="row">
-          {!this.state.loading && this.state.articles.map((element)=>{
+        {this.state.loading && <Spinner/>} 
+        <InfiniteScroll
+          dataLength={this.state.articles.length}
+          next={this.fetchMoreData}
+          style={{ display: 'flex', flexDirection: 'column-reverse' }} //To put endMessage and loader to the top.
+          hasMore={this.state.articles.length !== this.state.totalResults}
+          loader={<Spinner/>}
+        >
+          <div className="container">
+          <div className="row">
+          {this.state.articles.map((element)=>{
             return <div className="col md-4" key={element.url}>
             {/* Add a default image here */}
             <NewsItem title={element.title?element.title:""} description={element.description?element.description:""} imageUrl={element.urlToImage} newsUrl={element.url} author={element.author} date={element.publishedAt}/> 
           </div>
           })}
+         </div>
         </div>
-        <div className="container d-flex justify-content-between my-3">
+        </InfiniteScroll>
+        {/* <div className="container d-flex justify-content-between my-3">
         <button type="button" disabled={this.state.page <= 1} className="btn btn-dark" onClick={this.handlePrevClick}> &larr; Previous</button>
         <button type="button" disabled={this.state.page + 1 > Math.ceil(this.state.totalResults/this.props.pageSize)} className="btn btn-dark" onClick={this.handleNextClick}>Next &rarr;</button>
-        </div>
+        </div> */}
       </div>
     )
   }
